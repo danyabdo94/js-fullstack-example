@@ -16,15 +16,15 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     name: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     email: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     },
     password: {
       allowNull: false,
-      type: Sequelize.STRING
+      type: DataTypes.STRING
     }
   }, {
     sequelize,
