@@ -22,8 +22,8 @@ export function Login() {
             }}
           >
             <Form>
-              <Input name="email" label="E-mail" type="email" />
-              <Input name="password" label="Password" type="password" />
+              <Input name="email" label="E-mail" type="email" required={true} />
+              <Input name="password" label="Password" type="password" required={true} />
               <Button classes={loginButton} type="submit" title="Login" >
                 <LoginIcon />
               </Button>
@@ -33,8 +33,13 @@ export function Login() {
         <div className="py-5">
           <div className="grid grid-cols-2 gap-1">
             <div className="text-center sm:text-left whitespace-nowrap">
-              <Button classes={forgetButton} title="Forgot Password" >
+              <Button type="button" classes={forgetButton} title="Forgot Password" >
                 <ForgetIcon />
+              </Button>
+            </div>
+            <div class="text-center sm:text-right whitespace-nowrap">
+              <Button type="button" classes={forgetButton} title="Signup" >
+                <LoginIcon />
               </Button>
             </div>
           </div>
