@@ -1,7 +1,6 @@
 import React from 'react';
-import Button from "../../atoms/button"
-import Container from '../../atoms/container';
-import Input from '../../atoms/input';
+import { Formik, Form } from 'formik';
+import { Button, Container, Input } from "../../atoms"
 import { ReactComponent as LoginIcon } from "../../icons/login.svg";
 import { ReactComponent as ForgetIcon } from "../../icons/forget-password.svg";
 
@@ -12,11 +11,24 @@ export function Login() {
     <Container logo={true}>
       <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
         <div className="px-5 py-7">
-          <Input name="E-mail" />
-          <Input name="Password" />
-          <Button classes={loginButton} title="Login" >
-            <LoginIcon />
-          </Button>
+          <Formik
+            initialValues={{
+              email: '',
+              password: ''
+            }}
+            onSubmit={async (values) => {
+              await new Promise((r) => setTimeout(r, 500));
+              alert(JSON.stringify(values, null, 2));
+            }}
+          >
+            <Form>
+              <Input name="email" label="E-mail" type="email" />
+              <Input name="password" label="Password" type="password" />
+              <Button classes={loginButton} type="submit" title="Login" >
+                <LoginIcon />
+              </Button>
+            </Form>
+          </Formik>
         </div>
         <div className="py-5">
           <div className="grid grid-cols-2 gap-1">
