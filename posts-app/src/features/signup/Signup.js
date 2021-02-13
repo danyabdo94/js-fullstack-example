@@ -1,32 +1,24 @@
 import React from 'react';
-
+import Button from "../../atoms/button"
+import Container from '../../atoms/container';
+import Input from '../../atoms/input';
+import { ReactComponent as SignupIcon } from "../../icons/signup.svg";
 
 export function Signup() {
+  const signupButton = "transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block";
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
-      <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-        <div className="flex flex-row justify-center" >
-          <img alt="logo" src="./assets/logo.png"></img>
-        </div>
-        <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
-          <div className="px-5 py-7">
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">Full Name</label>
-            <input type="text" className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" />
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">E-mail</label>
-            <input type="text" className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" />
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">Password</label>
-            <input type="text" className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" />
-            <label className="font-semibold text-sm text-gray-600 pb-1 block">Re-Password</label>
-            <input type="text" className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full" />
-            <button type="button" className="transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block">
-              <span className="inline-block mr-2">Signup</span>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-4 h-4 inline-block">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-          </div>
+    <Container logo={true}>
+      <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
+        <div className="px-5 py-7">
+          <Input name="Full Name" />
+          <Input name="E-mail" />
+          <Input name="Password" />
+          <Input name="Re-Password" />
+          <Button classes={signupButton} title="Signup" >
+            <SignupIcon />
+          </Button>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
