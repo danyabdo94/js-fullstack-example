@@ -19,6 +19,17 @@ const typeDefs = gql`
         user: User!
         createdAt: String
     }
+    
+    type UserSub {
+        id: Int!
+        name: String!
+    }
+
+    type PostSub {
+        title: String!
+        user: UserSub!
+        createdAt: String!
+    }
 
     type Query {
         user(id: Int!): User
@@ -36,6 +47,11 @@ const typeDefs = gql`
           title: String!
         ): Post!
     }
+
+    type Subscription {
+        postCreated: Post
+    }
+      
 `
 
 module.exports = typeDefs

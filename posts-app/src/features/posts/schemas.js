@@ -28,3 +28,12 @@ export const Add_POST = gql`
     }
   }
 `
+
+
+export const POST_SUB = gql`
+  subscription {
+    postCreated {
+      title
+    }
+  }
+`

@@ -11,22 +11,49 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
-    const header = req.headers.authorization;
+    if (req && req.headers) {
+      const header = req.headers.authorization;
 
-    // not found
-    if (!header) return { isAuth: false, models };
+      // not found
+      if (!header) return { isAuth: false, models };
 
-    let decodeToken;
-    try {
-      decodeToken = jwt.verify(header, config.JWT_SECRET);
-    } catch (err) {
-      return { isAuth: false, models };
+      let decodeToken;
+      try {
+        decodeToken = jwt.verify(header, config.JWT_SECRET);
+      } catch (err) {
+        return { isAuth: false, models };
+      }
+      // in case any error found
+      if (!!!decodeToken) return { isAuth: false, models };
+
+      // token decoded successfully, and extracted data
+      return { isAuth: true, loggedUserId: decodeToken.id, loggedUserName: decodeToken.name, models };
     }
-    // in case any error found
-    if (!!!decodeToken) return { isAuth: false, models };
+  },
+  subscriptions: {
+    onConnect: (connectionParams, webSocket, context) => {
+      if (connectionParams.authorization) {
+        const header = connectionParams.authorization;
+        // not found
+        if (!header) return { isAuth: false, models };
 
-    // token decoded successfully, and extracted data
-    return { isAuth: true, loggedUserId: decodeToken.id, models };
+        let decodeToken;
+        try {
+          decodeToken = jwt.verify(header, config.JWT_SECRET);
+        } catch (err) {
+          return { isAuth: false, models };
+        }
+        // in case any error found
+        if (!!!decodeToken) return { isAuth: false, models };
+
+        // token decoded successfully, and extracted data
+        return { isAuth: true, loggedUserId: decodeToken.id, loggedUserName: decodeToken.name, models };
+      }
+      throw new Error('Missing auth token!');
+    },
+    onDisconnect: (webSocket, context) => {
+      console.log('Client disconnected')
+    },
   },
 })
 
