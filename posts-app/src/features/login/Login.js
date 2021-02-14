@@ -16,7 +16,8 @@ export function Login() {
     onError: error => {
       console.log(error)
     },
-    onCompleted: data => {
+    onCompleted: (data) => {
+      localStorage.setItem('token', data.login.token)
       history.push('/posts')
     }
   })
