@@ -5,7 +5,8 @@
     "database": "database_development",
     "host": "127.0.0.1",
     "dialect": "sqlite",
-    "storage": "./database.sqlite"
+    "storage": "./database.sqlite",
+    "JWT_SECRET":"posts_secret_key"
   },
   "test": {
     "username": "root",
@@ -13,7 +14,8 @@
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "sqlite",
-    "storage": "./database.sqlite"
+    "storage": "./database.sqlite",
+    "JWT_SECRET":"posts_secret_key"
   },
   "production": {
     "username": "root",
@@ -21,6 +23,7 @@
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "sqlite",
-    "storage": "./database.sqlite"
+    "storage": "./database.sqlite",
+    "JWT_SECRET":"posts_secret_key"
   }
 }
