@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server');
+const { AuthenticationError, ApolloError, UserInputError } = require('apollo-server');
 const bcrypt = require('bcryptjs');
 const jsonwebtoken = require('jsonwebtoken');
 const env = process.env.NODE_ENV || 'development';
@@ -32,11 +32,11 @@ const resolvers = {
             try {
                 const user = await models.User.findOne({ where: { email } })
                 if (!user) {
-                    throw new Error('No user with that email')
+                    throw new UserInputError('No user with that email')
                 }
                 const isValid = await bcrypt.compare(password, user.password)
                 if (!isValid) {
-                    throw new Error('Incorrect password')
+                    throw new UserInputError('Incorrect password')
                 }
                 // return jwt
                 const token = jsonwebtoken.sign(
@@ -48,7 +48,7 @@ const resolvers = {
                     token, user
                 }
             } catch (error) {
-                throw new Error(error.message)
+                throw new ApolloError(error.message)
             }
         }
 
