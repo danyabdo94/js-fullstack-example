@@ -32,8 +32,9 @@ export function Posts() {
                 initialValues={{
                   title: '',
                 }}
-                onSubmit={async (values) => {
+                onSubmit={async (values, { resetForm }) => {
                   await addPost({ variables: values })
+                  resetForm()
                 }}
               >
                 <Form>
