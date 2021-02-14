@@ -11,6 +11,7 @@ export const LOGIN = gql`
     ) {
         user {
             id
+            name
         }
         token
     }

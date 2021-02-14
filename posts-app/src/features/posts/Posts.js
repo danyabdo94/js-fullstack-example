@@ -13,8 +13,25 @@ import { ReactComponent as AddIcon } from "../../icons/add.svg"
 export function Posts() {
   const { loading, data: posts, refetch } = useQuery(schemas.GET_POSTS)
   const [addPost, { addingPost }] = useMutation(schemas.Add_POST, {
-    onError: error => {
-      console.log(error)
+    onError: ({ graphQLErrors, networkError, operation, forward }) => {
+      if (graphQLErrors) {
+        for (let err of graphQLErrors) {
+          switch (err.extensions.code) {
+            case 'UNAUTHENTICATED':
+              const oldHeaders = operation.getContext().headers;
+              operation.setContext({
+                headers: {
+                  ...oldHeaders,
+                  authorization: localStorage.getItem('token'),
+                },
+              });
+              // retry the request, returning the new observable
+              return forward(operation);
+            default:
+              return
+          }
+        }
+      }
     },
     onCompleted: (data) => {
       console.log("Saved Successfully")

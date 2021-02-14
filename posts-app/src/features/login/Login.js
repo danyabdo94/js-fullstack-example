@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Container, Input, Spinner } from "../../atoms"
 import { ReactComponent as LoginIcon } from "../../icons/login.svg"
 import { ReactComponent as ForgetIcon } from "../../icons/forget-password.svg"
+import { toast } from 'react-toastify';
 
 import * as schemas from "./schemas"
 
@@ -14,11 +15,12 @@ export function Login() {
   const history = useHistory();
   const [login, { loading }] = useMutation(schemas.LOGIN, {
     onError: error => {
-      console.log(error)
+      toast("Check your email and password please")
     },
     onCompleted: (data) => {
       localStorage.setItem('token', data.login.token)
       history.push('/posts')
+      toast(`Welcome again ${data?.login?.user?.name}`)
     }
   })
 
@@ -53,7 +55,7 @@ export function Login() {
               </Button>
             </div>
             <div className="text-center sm:text-right whitespace-nowrap">
-              <Button type="button" onClick={()=>history.push("/signup")} classes={forgetButton} title="Signup" >
+              <Button type="button" onClick={() => history.push("/signup")} classes={forgetButton} title="Signup" >
                 <LoginIcon />
               </Button>
             </div>
