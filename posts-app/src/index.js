@@ -8,14 +8,17 @@ import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, split } fr
 import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
+import { onError } from '@apollo/client/link/error';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
 });
 
-const token = localStorage.getItem('token');
 
 const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token');
+
+  console.log({headers})
   // get the authentication token from local storage if it exists
   // return the headers to the context so httpLink can read them
   return {
@@ -31,10 +34,11 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     connectionParams: {
-      authorization: token ? `${token}` : "",
+      authorization: localStorage.getItem('token') ? `${localStorage.getItem('token')}` : "",
     },
   },
 });
+
 const splitLink = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
@@ -43,13 +47,41 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  wsLink,
+  authLink.concat(wsLink),
   authLink.concat(httpLink),
+);
+
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, forward }) => {
+    if (graphQLErrors) {
+      for (let err of graphQLErrors) {
+        switch (err.extensions.code) {
+          case 'UNAUTHENTICATED':
+         
+            const oldHeaders = operation.getContext().headers;
+            operation.setContext({
+              headers: {
+                ...oldHeaders,
+                authorization: localStorage.getItem('token'),
+              },
+            });
+            // retry the request, returning the new observable
+            return forward(operation);
+          default:
+            return;
+        }
+      }
+    }
+    if (networkError) {
+      console.log(`[Network error]: ${networkError}`);
+    }
+  }
 );
 
 const client = new ApolloClient({
   link: splitLink,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  onError: errorLink
 });
 
 ReactDOM.render(
