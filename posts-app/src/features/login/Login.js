@@ -53,7 +53,7 @@ export function Login() {
               </Button>
             </div>
             <div className="text-center sm:text-right whitespace-nowrap">
-              <Button type="button" classes={forgetButton} title="Signup" >
+              <Button type="button" onClick={()=>history.push("/signup")} classes={forgetButton} title="Signup" >
                 <LoginIcon />
               </Button>
             </div>

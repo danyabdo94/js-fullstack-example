@@ -16,15 +16,16 @@ const resolvers = {
         },
     },
     Mutation: {
-        async createUser(root, { name, email, password }, { models, isAuth, loggedUserId }) {
-            if(!isAuth) throw new AuthenticationError('you must be logged in'); 
+        async signup(root, { name, email, password }, { models, isAuth }) {
+            const user = await models.User.findOne({ where: { email } })
+            if(user) throw new UserInputError('this mail already exists'); 
             return models.User.create({
                 name,
                 email,
                 password: await bcrypt.hash(password, 10)
             })
         },
-        async createPost(root, { userId, title }, { models, isAuth, loggedUserId }) {
+        async createPost(root, { userId, title }, { models, isAuth }) {
             if(!isAuth) throw new AuthenticationError('you must be logged in'); 
             return models.Post.create({ userId, title })
         },
