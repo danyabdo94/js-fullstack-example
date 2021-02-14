@@ -14,7 +14,7 @@ const resolvers = {
         },
         async allPosts(root, args, { models, isAuth, loggedUserId }) {
             if (!isAuth) throw new AuthenticationError('you must be logged in');
-            return models.Post.findAll()
+            return models.Post.findAll({ order: [['createdAt', 'DESC']] })
         },
     },
     Mutation: {
@@ -69,7 +69,7 @@ const resolvers = {
     },
     Subscription: {
         postCreated: {
-            resolve: ({postCreated}) => {
+            resolve: ({ postCreated }) => {
                 return {
                     ...postCreated
                 };
