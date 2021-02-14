@@ -17,6 +17,7 @@ const typeDefs = gql`
         id: Int!
         title: String!
         user: User!
+        createdAt: String
     }
 
     type Query {
@@ -32,7 +33,6 @@ const typeDefs = gql`
         ):AuthPayload!
 
         createPost(
-          userId: Int!
           title: String!
         ): Post!
     }

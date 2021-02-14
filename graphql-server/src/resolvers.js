@@ -25,9 +25,9 @@ const resolvers = {
                 password: await bcrypt.hash(password, 10)
             })
         },
-        async createPost(root, { userId, title }, { models, isAuth }) {
+        async createPost(root, { title }, { models, isAuth, loggedUserId }) {
             if(!isAuth) throw new AuthenticationError('you must be logged in'); 
-            return models.Post.create({ userId, title })
+            return models.Post.create({ userId: loggedUserId, title })
         },
         async login(_, { email, password }, { models }) {
             try {
