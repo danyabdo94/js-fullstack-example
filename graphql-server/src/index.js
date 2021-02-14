@@ -1,4 +1,4 @@
-const { ApolloServer } = require('apollo-server')
+const { ApolloServer, AuthenticationError } = require('apollo-server')
 const jwt = require("jsonwebtoken")
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
@@ -31,26 +31,6 @@ const server = new ApolloServer({
     }
   },
   subscriptions: {
-    onConnect: (connectionParams, webSocket, context) => {
-      if (connectionParams.authorization) {
-        const header = connectionParams.authorization;
-        // not found
-        if (!header) return { isAuth: false, models };
-
-        let decodeToken;
-        try {
-          decodeToken = jwt.verify(header, config.JWT_SECRET);
-        } catch (err) {
-          return { isAuth: false, models };
-        }
-        // in case any error found
-        if (!!!decodeToken) return { isAuth: false, models };
-
-        // token decoded successfully, and extracted data
-        return { isAuth: true, loggedUserId: decodeToken.id, loggedUserName: decodeToken.name, models };
-      }
-      throw new Error('Missing auth token!');
-    },
     onDisconnect: (webSocket, context) => {
       console.log('Client disconnected')
     },

@@ -18,7 +18,6 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
 
-  console.log({headers})
   // get the authentication token from local storage if it exists
   // return the headers to the context so httpLink can read them
   return {
@@ -33,9 +32,7 @@ const wsLink = new WebSocketLink({
   uri: 'ws://localhost:4000/graphql',
   options: {
     reconnect: true,
-    connectionParams: {
-      authorization: localStorage.getItem('token') ? `${localStorage.getItem('token')}` : "",
-    },
+    lazy: true,
   },
 });
 
@@ -47,7 +44,7 @@ const splitLink = split(
       definition.operation === 'subscription'
     );
   },
-  authLink.concat(wsLink),
+  wsLink,
   authLink.concat(httpLink),
 );
 
@@ -57,7 +54,7 @@ const errorLink = onError(
       for (let err of graphQLErrors) {
         switch (err.extensions.code) {
           case 'UNAUTHENTICATED':
-         
+
             const oldHeaders = operation.getContext().headers;
             operation.setContext({
               headers: {
